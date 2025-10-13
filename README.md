@@ -1,2 +1,2 @@
 # Product_Management_System
-This repository is used for codes of a training project. Inclouding frontend and backend in mainly Javascript React and Node.js
+This repository is built for a training project. We will use MERN stack (MongoDB + Express.js + React + Node.js) to build a online product management system.

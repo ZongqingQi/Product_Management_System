@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# node modules
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# dotenv
+.env
+
+# build files
+client/build/
+server/dist/
+
+# logs
+*.log
+
+# system
+Thumbs.db
