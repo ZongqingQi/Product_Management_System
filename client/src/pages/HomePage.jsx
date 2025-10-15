@@ -1,10 +1,17 @@
-import ProductGrid from '../components/ProductGrid'
-import '../styles/HomePage.css'
+import ProductGrid from '../components/ProductGrid';
+import ProductControlBar from '../components/ProductControlBar';
+import { useState } from 'react';
 
 function HomePage() {
+  const [sortOption, setSortOption] = useState('latest');
+
   return (
     <div className="homepage-container">
-      <ProductGrid />
+      <ProductControlBar
+        sortOption={sortOption}
+        onSortChange={setSortOption}
+      />
+      <ProductGrid sortOption={sortOption} />
     </div>
   );
 }
