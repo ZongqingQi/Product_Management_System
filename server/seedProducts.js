@@ -11,7 +11,7 @@ const sampleProducts = [
     category: "Electronics",
     price: 25.99,
     quantity: 100,
-    image: "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=500&q=80",
+    image: "https://webobjects2.cdw.com/is/image/CDW/2429821",
   },
   {
     name: "Running Shoes",
@@ -19,7 +19,7 @@ const sampleProducts = [
     category: "Shoes",
     price: 59.99,
     quantity: 50,
-    image: "https://images.unsplash.com/photo-1600180758890-6e0e1d5e22f6?auto=format&fit=crop&w=500&q=80",
+    image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1741716872-puma-foreverrun-nitro-2-67d07d7915584.jpg",
   },
   {
     name: "Bluetooth Headphones",
@@ -27,7 +27,7 @@ const sampleProducts = [
     category: "Electronics",
     price: 79.99,
     quantity: 40,
-    image: "https://images.unsplash.com/photo-1585386959984-a4155228d3ec?auto=format&fit=crop&w=500&q=80",
+    image: "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6408/6408357_rd.jpg",
   },
   {
     name: "Classic Novel",
@@ -35,7 +35,7 @@ const sampleProducts = [
     category: "Books",
     price: 14.5,
     quantity: 200,
-    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80",
+    image: "https://images.squarespace-cdn.com/content/v1/604ffb544c6d436ffc845808/085b0e6a-10b7-4d70-b58d-6b6c5cd76810/classic-literature.jpg",
   },
   {
     name: "Denim Jacket",
@@ -43,7 +43,7 @@ const sampleProducts = [
     category: "Clothing",
     price: 45.0,
     quantity: 30,
-    image: "https://images.unsplash.com/photo-1618354691417-e0b27f2cdb06?auto=format&fit=crop&w=500&q=80",
+    image: "https://schaeferoutfitter.com/cdn/shop/files/8000_legend-denim-jacket_MI_front1.jpg",
   }
 ];
 

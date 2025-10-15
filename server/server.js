@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors';
 
-import pingRoutes from './routes/pingRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 
 dotenv.config()
@@ -17,7 +16,6 @@ app.use(cors());
 app.use(express.json())
 
 // Routes
-app.use('/api', pingRoutes) // this is for testing
 app.use('/api/products', productRoutes);
 
 // MongoDB connection
