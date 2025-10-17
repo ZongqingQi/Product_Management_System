@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: 6,
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',     // 默认普通用户
+  },
 }, { timestamps: true });
 
 // 在保存前自动加密密码

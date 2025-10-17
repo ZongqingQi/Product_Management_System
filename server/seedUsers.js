@@ -10,13 +10,16 @@ const sampleUsers = [
     name: 'Admin User',
     email: 'admin@example.com',
     password: '123456',
+    role: 'admin',       // 管理员
   },
   {
     name: 'Test User',
     email: 'test@example.com',
     password: '123456',
+    role: 'user',
   },
 ];
+
 
 const seedUsers = async () => {
   try {

@@ -18,13 +18,11 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      {/* 左侧 Logo */}
-      <div className="navbar-left" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+      <div className="navbar-left">
         <img src="/logo.png" alt="Logo" className="navbar-logo" />
         <span className="navbar-brand">Management</span>
       </div>
 
-      {/* 中间搜索框 */}
       <div className="navbar-center">
         <input
           type="text"
@@ -33,28 +31,12 @@ const Navbar = () => {
         />
       </div>
 
-      {/* 右侧部分 */}
       <div className="navbar-right">
         {loading ? (
           <span>Loading...</span>
         ) : isLoggedIn && user ? (
           <>
-            {/* 👑 仅管理员可见 “Create Product” */}
-            {user.role === "admin" && (
-              <button
-                className="navbar-btn"
-                onClick={() => navigate("/create")}
-                style={{ marginRight: "10px" }}
-              >
-                + Create Product
-              </button>
-            )}
-
-            {/* 用户欢迎信息 */}
-            <span style={{ marginRight: "10px" }}>
-              👋 Hi, {user.name} ({user.role})
-            </span>
-
+            <span style={{ marginRight: "10px" }}>👋 Hi, {user.name}</span>
             <button className="navbar-btn" onClick={handleAuthClick}>
               Sign Out
             </button>
@@ -64,12 +46,6 @@ const Navbar = () => {
             Sign In
           </button>
         )}
-
-        {/* 购物车图标 */}
-        <div className="navbar-cart">
-          <img src="/cart-icon.svg" alt="Cart" />
-          <span className="navbar-cart-amount">$0.00</span>
-        </div>
       </div>
     </nav>
   );

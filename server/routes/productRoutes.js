@@ -4,22 +4,19 @@ import {
   createProduct,
   getProductById,
   updateProductById,
-  deleteProductById
+  deleteProductById,
 } from '../controllers/productController.js';
+import { protect, adminOnly } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Create
-router.post('/', createProduct);
+router.route('/')
+  .get(getAllProducts)
+  .post(protect, adminOnly, createProduct); // ✅ 仅管理员
 
-// Read
-router.get('/', getAllProducts);
-router.get('/:id', getProductById);
-
-// Update
-router.put('/:id', updateProductById);
-
-// Delete
-router.delete('/:id', deleteProductById);
+router.route('/:id')
+  .get(getProductById)
+  .put(protect, adminOnly, updateProductById) // ✅ 仅管理员
+  .delete(protect, adminOnly, deleteProductById); // ✅ 仅管理员
 
 export default router;
