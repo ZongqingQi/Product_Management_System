@@ -20,8 +20,7 @@ const LoginPage = () => {
         password,
       });
 
-      // 登录成功
-      login(res.data); // 更新 context + 保存 token
+      login(res.data);
       console.log("Login success:", res.data);
       navigate("/");
     } catch (err) {

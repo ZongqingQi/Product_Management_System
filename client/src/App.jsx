@@ -2,13 +2,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LoginProvider } from "./context/LoginContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import ProtectedRoute from "./components/ProtectedRoute"; // ✅ 新增
+import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import CreateProductPage from "./pages/CreateProductPage";
 import EditProductPage from "./pages/EditProductPage";
+import ProductDetailPage from './pages/ProductDetailPage';
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
@@ -21,8 +23,9 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
 
-            {/* 受保护路由：只有登录用户可访问 */}
             <Route
               path="/create"
               element={

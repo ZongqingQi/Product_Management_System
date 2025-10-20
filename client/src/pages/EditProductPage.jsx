@@ -4,12 +4,11 @@ import ProductForm from '../components/ProductForm';
 import axios from 'axios';
 
 function EditProductPage() {
-  const { id } = useParams(); // 从 URL 获取商品 ID
+  const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    // 获取当前商品信息
     const fetchProduct = async () => {
       try {
         const res = await axios.get(`http://localhost:5001/api/products/${id}`);
@@ -23,8 +22,19 @@ function EditProductPage() {
 
   const handleUpdate = async (updatedProduct) => {
     try {
-      await axios.put(`http://localhost:5001/api/products/${id}`, updatedProduct);
-      navigate('/'); // 成功后返回首页
+      const token = localStorage.getItem("token");
+
+      await axios.put(
+        `http://localhost:5001/api/products/${id}`,
+        updatedProduct,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      navigate('/');
     } catch (err) {
       console.error('Failed to update product:', err);
       alert('Failed to update product.');

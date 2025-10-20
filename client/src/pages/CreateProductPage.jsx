@@ -7,10 +7,22 @@ function CreateProductPage() {
 
   const handleCreate = async (productData) => {
     try {
-      await axios.post('http://localhost:5001/api/products', productData);
-      navigate('/'); // 成功后跳转回首页
+      const token = localStorage.getItem("token");
+
+      await axios.post(
+        "http://localhost:5001/api/products",
+        productData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      navigate("/");
     } catch (error) {
-      console.error('Failed to create product:', error);
+      console.error("Failed to create product:", error);
+      alert("Failed to create product. Check console for details.");
     }
   };
 

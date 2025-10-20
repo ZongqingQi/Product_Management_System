@@ -12,11 +12,11 @@ const router = express.Router();
 
 router.route('/')
   .get(getAllProducts)
-  .post(protect, adminOnly, createProduct); // ✅ 仅管理员
+  .post(protect, adminOnly, createProduct);
 
 router.route('/:id')
   .get(getProductById)
-  .put(protect, adminOnly, updateProductById) // ✅ 仅管理员
-  .delete(protect, adminOnly, deleteProductById); // ✅ 仅管理员
+  .put(protect, adminOnly, updateProductById)
+  .delete(protect, adminOnly, deleteProductById);
 
 export default router;

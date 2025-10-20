@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignUpPage = () => {
-  const [name, setName] = useState(''); // ✅ 新增
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [role, setRole] = useState('regular');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -21,9 +22,10 @@ const SignUpPage = () => {
 
     try {
       const res = await axios.post('http://localhost:5001/api/users/signup', {
-        name,      // ✅ 新增字段
+        name,
         email,
         password,
+        role,
       });
 
       console.log('Signup success:', res.data);
@@ -71,6 +73,16 @@ const SignUpPage = () => {
           onChange={(e) => setConfirm(e.target.value)}
           required
         />
+
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          required
+        >
+          <option value="regular">Regular User</option>
+          <option value="admin">Admin</option>
+        </select>
+
         <button type="submit">Sign Up</button>
       </form>
 

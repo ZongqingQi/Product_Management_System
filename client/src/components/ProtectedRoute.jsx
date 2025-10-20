@@ -13,7 +13,6 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // ✅ 修正：明确判断 role，不是 admin 则拒绝
   if (requiredRole && user?.role !== requiredRole) {
     alert("You do not have permission to access this page.");
     return <Navigate to="/" replace />;

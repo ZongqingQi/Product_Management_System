@@ -26,7 +26,6 @@
   background-color: #45a049;
 }
 
-/* ✅ 商品展示区使用 Grid 布局 */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -52,8 +51,6 @@
   }
 }
 
-
-/* ✅ 商品卡片样式 */
 .product-card {
   width: 220px;
   border: 1px solid #ddd;
@@ -67,7 +64,6 @@
   transform: scale(1.03);
 }
 
-/* ✅ 图片 */
 .product-image {
   width: 100%;
   height: 180px;
@@ -75,7 +71,6 @@
   border-radius: 8px;
 }
 
-/* ✅ 商品信息 */
 .product-info {
   margin-top: 10px;
 }
@@ -86,7 +81,6 @@
   margin-top: 5px;
 }
 
-/* ✅ Edit 按钮 */
 .edit-btn {
   margin-top: 8px;
   padding: 6px 12px;

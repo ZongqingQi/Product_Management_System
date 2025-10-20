@@ -19,12 +19,11 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user',     // 默认普通用户
+    enum: ['regular', 'admin'],
+    default: 'regular',
   },
 }, { timestamps: true });
 
-// 在保存前自动加密密码
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
@@ -32,7 +31,6 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// 验证密码的方法
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

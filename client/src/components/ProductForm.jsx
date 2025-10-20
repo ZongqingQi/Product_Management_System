@@ -72,7 +72,17 @@ function ProductForm({ mode = 'create', initialData = {}, onSubmit }) {
         <div className="form-row">
           <div className="form-group">
             <label>In Stock Quantity</label>
-            <input name="quantity" type="number" value={formData.quantity} onChange={handleChange} required />
+            <input
+              name="quantity"
+              type="number"
+              value={formData.quantity}
+              onChange={handleChange}
+              required
+              onWheel={(e) => e.target.blur()}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault();
+              }}
+            />
           </div>
 
           <div className="form-group">
