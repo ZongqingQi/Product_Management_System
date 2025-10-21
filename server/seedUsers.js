@@ -10,13 +10,13 @@ const sampleUsers = [
     name: 'Admin User',
     email: 'admin@example.com',
     password: '123456',
-    role: 'admin',       // 管理员
+    role: 'admin',       
   },
   {
     name: 'Test User',
     email: 'test@example.com',
     password: '123456',
-    role: 'user',
+    role: 'regular',  
   },
 ];
 
