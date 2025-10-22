@@ -71,6 +71,31 @@
   background-color: #e0e0e0;
 }
 
+.navbar-cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.navbar-cart:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-cart svg {
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.navbar-cart-amount {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .cart-info {
   display: flex;
   align-items: center;
