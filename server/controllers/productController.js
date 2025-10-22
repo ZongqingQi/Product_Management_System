@@ -4,35 +4,35 @@ import Product from '../models/Product.js'
 // GET /api/products -- get all products
 export const getAllProducts = async (req, res) => {
   try {
-    // 获取分页参数
-    const page = parseInt(req.query.page) || 1;        //  从URL参数获取页码(比如 /api/products?page=2), 当前第几页，默认第1页
-    const limit = parseInt(req.query.limit) || 10;     // 每页显示几条，默认10条
-    const skip = (page - 1) * limit;                   // 计算跳过多少条数据
+    // Get pagination parameters
+    const page = parseInt(req.query.page) || 1;        // Get page number from URL params (e.g. /api/products?page=2), default is page 1
+    const limit = parseInt(req.query.limit) || 12;     // Items per page, default is 12
+    const skip = (page - 1) * limit;                   // Calculate how many items to skip
 
     const { search } = req.query;
     let query = {};
 
-    if (search) {    //如果找到了search
-      query = {     //修改query对象
-        $or: [                           //$or - 或操作符，满足任一条件即可(MongoDB的语法)
-          { name: new RegExp(search, "i") },   //new RegExp(search, "i") - 创建正则表达式, "i" - 不区分大小写（case-insensitive）
+    if (search) {    // If search parameter exists
+      query = {     // Modify query object
+        $or: [                           // $or - OR operator, match any condition (MongoDB syntax)
+          { name: new RegExp(search, "i") },   // new RegExp(search, "i") - Create regex, "i" - case-insensitive
           { description: new RegExp(search, "i") },
         ],
       };
     }
 
-    // 获取总数据量
+    // Get total count
     const total = await Product.countDocuments(query);
 
     const products = await Product.find(query)
-     .skip(skip)      // 跳过前面的数据
-     .limit(limit);   // 只取 limit 条数据;     MongoDB的分页方法
+     .skip(skip)      // Skip previous items
+     .limit(limit);   // Only take 'limit' number of items - MongoDB pagination method
 
     res.status(200).json({
-      products,                          // 产品数据
-      currentPage: page,                 // 当前页码
-      totalPages: Math.ceil(total / limit),  // 总页数,  向上取整
-      totalProducts: total               // 总产品数
+      products,                          // Product data
+      currentPage: page,                 // Current page number
+      totalPages: Math.ceil(total / limit),  // Total pages, round up
+      totalProducts: total               // Total number of products
     });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch products" });

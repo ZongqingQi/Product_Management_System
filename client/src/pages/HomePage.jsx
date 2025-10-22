@@ -19,7 +19,36 @@ const HomePage = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
-  const limit = 10;
+  const [limit, setLimit] = useState(12); // Responsive: dynamically adjust based on screen size
+
+  // Calculate items per page based on screen width
+  const calculateLimit = () => {
+    const width = window.innerWidth;
+    if (width > 1200) return 12;      // Large screen: 4 columns × 3 rows
+    if (width > 800) return 9;        // Medium screen: 3 columns × 3 rows
+    if (width > 500) return 6;        // Small screen: 2 columns × 3 rows
+    return 4;                         // Mobile: 1 column × 4 rows
+  };
+
+  // Listen to window resize and dynamically adjust limit
+  useEffect(() => {
+    const handleResize = () => {
+      const newLimit = calculateLimit();
+      if (newLimit !== limit) {
+        setLimit(newLimit);
+        setCurrentPage(1); // Reset to first page
+      }
+    };
+
+    // Set initial value
+    handleResize();
+
+    // Add resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup function
+    return () => window.removeEventListener("resize", handleResize);
+  }, [limit]);
 
   useEffect(() => {
     const fetchProducts = async () => {
