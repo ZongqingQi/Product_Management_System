@@ -1,11 +1,19 @@
 .footer {
   background-color: #1a1a1a;
   color: #f0f0f0;
-  padding: 30px 50px;
+  height: 80px;
+  min-height: 80px;
+  max-height: 80px;
   font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-content {
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,15 +48,22 @@
 .footer-icons {
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 
-.footer-icons img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0) invert(1); /* Make icons white */
+.footer-icons a {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.3s;
 }
 
-.footer-icons img:hover {
+.footer-icons a:hover {
   opacity: 0.7;
+}
+
+.footer-icons svg {
+  width: 20px;
+  height: 20px;
 }

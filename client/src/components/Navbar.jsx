@@ -42,55 +42,57 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div
-        className="navbar-left"
-        onClick={() => navigate("/")}
-        style={{ cursor: "pointer" }}
-      >
-        <span className="navbar-brand">Chuwa Management</span>
-      </div>
-
-      <div className="navbar-center">
-        {isLoggedIn && (
-          <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="navbar-search"
-            />
-          </form>
-        )}
-      </div>
-
-      <div className="navbar-right">
-        {loading ? (
-          <span>Loading...</span>
-        ) : isLoggedIn && user ? (
-          <>
-            <span style={{ marginRight: "10px" }}>
-              👋 Hi, {user.name} ({user.role})
-            </span>
-            <button className="navbar-btn" onClick={handleAuthClick}>
-              Sign Out
-            </button>
-          </>
-        ) : (
-          <button className="navbar-btn" onClick={handleAuthClick}>
-            Sign In
-          </button>
-        )}
-
+      <div className="navbar-container">
         <div
-          className="navbar-cart"
-          onClick={() => navigate("/cart")}
+          className="navbar-left"
+          onClick={() => navigate("/")}
           style={{ cursor: "pointer" }}
         >
-          <img src="/cart-icon.svg" alt="Cart" />
-          <span className="navbar-cart-amount">
-            ${total.toFixed(2)}
-          </span>
+          <span className="navbar-brand">Chuwa Management</span>
+        </div>
+
+        <div className="navbar-center">
+          {isLoggedIn && (
+            <form onSubmit={handleSearch}>
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="navbar-search"
+              />
+            </form>
+          )}
+        </div>
+
+        <div className="navbar-right">
+          {loading ? (
+            <span>Loading...</span>
+          ) : isLoggedIn && user ? (
+            <>
+              <span style={{ marginRight: "10px" }}>
+                Hi, {user.name} ({user.role})
+              </span>
+              <button className="navbar-btn" onClick={handleAuthClick}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button className="navbar-btn" onClick={handleAuthClick}>
+              Sign In
+            </button>
+          )}
+
+          <div
+            className="navbar-cart"
+            onClick={() => navigate("/cart")}
+            style={{ cursor: "pointer" }}
+          >
+            <img src="/cart-icon.svg" alt="Cart" />
+            <span className="navbar-cart-amount">
+              ${total.toFixed(2)}
+            </span>
+          </div>
         </div>
       </div>
     </nav>
