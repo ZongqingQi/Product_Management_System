@@ -55,6 +55,35 @@ const HomePage = () => {
     }
   };
 
+  const handleDeleteProduct = async (productId, productName) => {
+    if (!window.confirm(`Are you sure you want to delete "${productName}"?`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5001/api/products/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // 刷新产品列表
+      const res = await axios.get("http://localhost:5001/api/products", {
+        params: {
+          page: currentPage,
+          limit: limit,
+          ...(searchQuery && { search: searchQuery }),
+        },
+      });
+      setProducts(res.data.products);
+      setTotalPages(res.data.totalPages);
+
+      alert("Product deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product. Please try again.");
+    }
+  };
+
   if (loading) return <div className="loading">Loading products...</div>;
 
   return (
@@ -139,12 +168,20 @@ const HomePage = () => {
 
 
                   {isLoggedIn && user?.role === "admin" && (
-                    <button
-                      className="edit-btn"
-                      onClick={() => navigate(`/edit/${product._id}`)}
-                    >
-                      Edit
-                    </button>
+                    <div className="admin-actions">
+                      <button
+                        className="edit-btn"
+                        onClick={() => navigate(`/edit/${product._id}`)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeleteProduct(product._id, product.name)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
