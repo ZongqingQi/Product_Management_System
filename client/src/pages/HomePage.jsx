@@ -9,6 +9,8 @@ import "../styles/HomePage.css";
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isLoggedIn } = useContext(LoginContext);
@@ -17,15 +19,21 @@ const HomePage = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
+  const limit = 10;
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const res = await axios.get("http://localhost:5001/api/products", {
-          params: searchQuery ? { search: searchQuery } : {},
+          params: {
+            page: currentPage,
+            limit: limit,
+            ...(searchQuery && { search: searchQuery }),
+          },
         });
-        setProducts(res.data);
+        setProducts(res.data.products);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {
@@ -33,11 +41,18 @@ const HomePage = () => {
       }
     };
     fetchProducts();
-  }, [searchQuery]);
+  }, [searchQuery, currentPage, limit]);
 
   const getCartQuantity = (id) => {
     const item = cartItems.find((i) => i._id === id);
     return item ? item.quantity : 0;
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   if (loading) return <div className="loading">Loading products...</div>;
@@ -135,6 +150,30 @@ const HomePage = () => {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            上一页
+          </button>
+
+          <span className="pagination-info">
+            第 {currentPage} 页 / 共 {totalPages} 页
+          </span>
+
+          <button
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            下一页
+          </button>
         </div>
       )}
     </div>

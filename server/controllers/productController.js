@@ -4,20 +4,36 @@ import Product from '../models/Product.js'
 // GET /api/products -- get all products
 export const getAllProducts = async (req, res) => {
   try {
+    // 获取分页参数
+    const page = parseInt(req.query.page) || 1;        //  从URL参数获取页码(比如 /api/products?page=2), 当前第几页，默认第1页
+    const limit = parseInt(req.query.limit) || 10;     // 每页显示几条，默认10条
+    const skip = (page - 1) * limit;                   // 计算跳过多少条数据
+
     const { search } = req.query;
     let query = {};
 
-    if (search) {
-      query = {
-        $or: [
-          { name: new RegExp(search, "i") },
+    if (search) {    //如果找到了search
+      query = {     //修改query对象
+        $or: [                           //$or - 或操作符，满足任一条件即可(MongoDB的语法)
+          { name: new RegExp(search, "i") },   //new RegExp(search, "i") - 创建正则表达式, "i" - 不区分大小写（case-insensitive）
           { description: new RegExp(search, "i") },
         ],
       };
     }
 
-    const products = await Product.find(query);
-    res.status(200).json(products);
+    // 获取总数据量
+    const total = await Product.countDocuments(query);
+
+    const products = await Product.find(query)
+     .skip(skip)      // 跳过前面的数据
+     .limit(limit);   // 只取 limit 条数据;     MongoDB的分页方法
+
+    res.status(200).json({
+      products,                          // 产品数据
+      currentPage: page,                 // 当前页码
+      totalPages: Math.ceil(total / limit),  // 总页数,  向上取整
+      totalProducts: total               // 总产品数
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch products" });
   }
