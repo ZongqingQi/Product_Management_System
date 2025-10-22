@@ -56,10 +56,11 @@ function ProductForm({ mode = 'create', initialData = {}, onSubmit }) {
             <label>Category</label>
             <select name="category" value={formData.category} onChange={handleChange}>
               <option value="">Select a Category</option>
-              <option value="Books">Books</option>
-              <option value="Shoes">Shoes</option>
               <option value="Electronics">Electronics</option>
-              <option value="Clothing">Clothing</option>
+              <option value="Clothing & Accessories">Clothing & Accessories</option>
+              <option value="Books & Stationery">Books & Stationery</option>
+              <option value="Sports">Sports</option>
+              <option value="Home">Home</option>
             </select>
           </div>
 
