@@ -4,7 +4,7 @@ import User from '../models/User.js';
 export const protect = async (req, res, next) => {
   let token;
 
-  // 前端发送请求时在 header 带上 Authorization: Bearer <token>
+  // Check if Authorization header contains Bearer token
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -13,7 +13,7 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // 将用户信息挂载到 req 对象上（不包含密码）
+      // Attach user info to request object (exclude password)
       req.user = await User.findById(decoded.id).select('-password');
       next();
     } catch (error) {

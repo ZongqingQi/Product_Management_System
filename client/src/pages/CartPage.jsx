@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../styles/CartPage.css";
 
-// 促销码列表
+// Promo code list
 const PROMO_CODES = {
-  "SAVE10": { discount: 10, type: "percentage" },  // 10% off
-  "SAVE20": { discount: 20, type: "percentage" },  // 20% off
-  "FLAT50": { discount: 50, type: "fixed" },       // $50 off
+  "SAVE10": { discount: 10, type: "percentage" },
+  "SAVE20": { discount: 20, type: "percentage" },
+  "FLAT50": { discount: 50, type: "fixed" },
 };
 
 const CartPage = () => {
@@ -20,44 +20,44 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 促销码状态
+  // Promo code state
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // 计算原始总价
+  // Calculate original total
   const originalTotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
-  // 计算折扣金额
+  // Calculate discount amount
   const discount = appliedPromo
     ? appliedPromo.type === "percentage"
       ? (originalTotal * appliedPromo.discount) / 100
       : appliedPromo.discount
     : 0;
 
-  // 计算最终价格
+  // Calculate final price
   const finalTotal = Math.max(0, originalTotal - discount);
 
-  // 应用促销码
+  // Apply promo code
   const handleApplyPromo = () => {
     const trimmedCode = promoCode.trim().toUpperCase();
 
-    // 验证：不能为空
+    // Validation: cannot be empty
     if (!trimmedCode) {
       setErrorMessage("Please enter a promo code");
       return;
     }
 
-    // 验证：促销码是否存在
+    // Validation: check if promo code exists
     if (!PROMO_CODES[trimmedCode]) {
       setErrorMessage("Invalid promo code");
       return;
     }
 
-    // 应用促销码
+    // Apply promo code
     setAppliedPromo({
       code: trimmedCode,
       ...PROMO_CODES[trimmedCode],
@@ -66,7 +66,7 @@ const CartPage = () => {
     setPromoCode("");
   };
 
-  // 移除促销码
+  // Remove promo code
   const handleRemovePromo = () => {
     setAppliedPromo(null);
     setPromoCode("");
@@ -82,7 +82,7 @@ const CartPage = () => {
         ← Back to Home
       </button>
 
-      <h2 className="cart-title">🛒 My Cart</h2>
+      <h2 className="cart-title">My Cart</h2>
 
       {items.length === 0 ? (
         <p className="cart-empty">Your cart is empty.</p>
@@ -139,14 +139,14 @@ const CartPage = () => {
                   className="remove-btn"
                   onClick={() => dispatch(removeFromCart(item._id))}
                 >
-                  ✕
+                  X
                 </button>
               </div>
             ))}
           </div>
 
           <div className="cart-summary">
-            {/* 促销码输入区域 */}
+            {/* Promo code input area */}
             <div className="promo-section">
               <h4>Have a promo code?</h4>
               {!appliedPromo ? (
@@ -170,7 +170,7 @@ const CartPage = () => {
               ) : (
                 <div className="applied-promo">
                   <p className="promo-success">
-                    ✓ Promo "{appliedPromo.code}" applied!{" "}
+                    Promo "{appliedPromo.code}" applied!{" "}
                     {appliedPromo.type === "percentage"
                       ? `${appliedPromo.discount}% off`
                       : `$${appliedPromo.discount} off`}
@@ -182,7 +182,7 @@ const CartPage = () => {
               )}
             </div>
 
-            {/* 价格明细 */}
+            {/* Price breakdown */}
             <div className="price-breakdown">
               <div className="price-row">
                 <span>Subtotal:</span>

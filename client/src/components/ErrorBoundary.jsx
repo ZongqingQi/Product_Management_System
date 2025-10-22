@@ -8,12 +8,12 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // 更新 state，下次渲染时显示错误 UI
+    // Update state to display error UI on next render
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // 可以将错误记录到错误报告服务
+    // Log error to error reporting service
     console.error("ErrorBoundary caught an error:", error, errorInfo);
     this.setState({
       error: error,
@@ -22,15 +22,15 @@ class ErrorBoundary extends React.Component {
   }
 
   handleReset = () => {
-    // 重置错误状态
+    // Reset error state
     this.setState({ hasError: false, error: null, errorInfo: null });
-    // 刷新页面
+    // Navigate to home page
     window.location.href = "/";
   };
 
   render() {
     if (this.state.hasError) {
-      // 错误 UI
+      // Error UI
       return (
         <div className="error-boundary-container">
           <div className="error-boundary-content">
@@ -39,7 +39,7 @@ class ErrorBoundary extends React.Component {
               We're sorry, but something unexpected happened. Please try again.
             </p>
 
-            {/* 显示错误详情（仅在开发环境） */}
+            {/* Show error details in development only */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="error-details">
                 <summary>Error Details (Development Only)</summary>
@@ -66,7 +66,7 @@ class ErrorBoundary extends React.Component {
       );
     }
 
-    // 正常情况下渲染子组件
+    // Render children normally
     return this.props.children;
   }
 }

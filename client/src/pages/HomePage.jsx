@@ -95,7 +95,7 @@ const HomePage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // 刷新产品列表
+      // Refresh product list
       const res = await axios.get("http://localhost:5001/api/products", {
         params: {
           page: currentPage,
@@ -226,11 +226,11 @@ const HomePage = () => {
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
-            上一页
+            Previous
           </button>
 
           <span className="pagination-info">
-            第 {currentPage} 页 / 共 {totalPages} 页
+            Page {currentPage} of {totalPages}
           </span>
 
           <button
@@ -238,7 +238,7 @@ const HomePage = () => {
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
-            下一页
+            Next
           </button>
         </div>
       )}
