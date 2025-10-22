@@ -2,7 +2,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   updateQuantity,
   removeFromCart,
-  clearCart,
 } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -74,140 +73,131 @@ const CartPage = () => {
   };
 
   return (
-    <div className="cart-container">
-      <button
-        className="back-home-btn"
-        onClick={() => navigate("/")}
-      >
-        ← Back to Home
-      </button>
+    <div className="cart-page">
+      <div className="cart-main-content">
+        <button className="back-home-btn" onClick={() => navigate("/")}>
+          Back to Home
+        </button>
 
-      <h2 className="cart-title">My Cart</h2>
+        <h1 className="cart-page-title">Shopping Cart ({items.length})</h1>
 
-      {items.length === 0 ? (
-        <p className="cart-empty">Your cart is empty.</p>
-      ) : (
-        <>
-          <div className="cart-list">
+        {items.length === 0 ? (
+          <div className="cart-empty-state">
+            <p>Your cart is empty.</p>
+            <button className="continue-shopping-btn" onClick={() => navigate("/")}>
+              Continue Shopping
+            </button>
+          </div>
+        ) : (
+          <div className="cart-items-list">
             {items.map((item) => (
-              <div key={item._id} className="cart-item">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="cart-item-image"
-                />
-                <div className="cart-item-info">
-                  <h3>{item.name}</h3>
-                  <p>${item.price.toFixed(2)}</p>
+              <div key={item._id} className="cart-product-item">
+                <img src={item.image} alt={item.name} className="cart-product-image" />
+                <div className="cart-product-details">
+                  <h3 className="cart-product-name">{item.name}</h3>
+                  <p className="cart-product-price">${item.price.toFixed(2)}</p>
 
-                  <div className="quantity-control">
+                  <div className="cart-quantity-control">
                     <button
-                      className="qty-btn"
+                      className="qty-decrease"
                       onClick={() =>
-                        dispatch(
-                          updateQuantity({
-                            id: item._id,
-                            quantity: item.quantity - 1,
-                          })
-                        )
+                        dispatch(updateQuantity({ id: item._id, quantity: item.quantity - 1 }))
                       }
+                      disabled={item.quantity <= 1}
                     >
-                      −
+                      -
                     </button>
-                    <span className="qty-value">{item.quantity}</span>
+                    <input type="number" className="qty-input" value={item.quantity} readOnly />
                     <button
-                      className="qty-btn"
+                      className="qty-increase"
                       onClick={() =>
-                        dispatch(
-                          updateQuantity({
-                            id: item._id,
-                            quantity: item.quantity + 1,
-                          })
-                        )
+                        dispatch(updateQuantity({ id: item._id, quantity: item.quantity + 1 }))
                       }
                     >
-                      ＋
+                      +
                     </button>
                   </div>
 
-                  <p className="cart-item-subtotal">
-                    Subtotal: ${(item.price * item.quantity).toFixed(2)}
-                  </p>
+                  <button
+                    className="cart-remove-btn"
+                    onClick={() => dispatch(removeFromCart(item._id))}
+                  >
+                    Remove
+                  </button>
                 </div>
-
-                <button
-                  className="remove-btn"
-                  onClick={() => dispatch(removeFromCart(item._id))}
-                >
-                  X
-                </button>
+                <div className="cart-product-subtotal">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </div>
               </div>
             ))}
           </div>
+        )}
+      </div>
 
-          <div className="cart-summary">
-            {/* Promo code input area */}
-            <div className="promo-section">
-              <h4>Have a promo code?</h4>
+      {items.length > 0 && (
+        <div className="cart-sidebar">
+          <div className="cart-summary-box">
+            <h3 className="summary-title">Order Summary</h3>
+
+            <div className="promo-code-section">
+              <label>Apply Discount Code</label>
               {!appliedPromo ? (
                 <>
-                  <div className="promo-input-group">
+                  <div className="promo-input-wrapper">
                     <input
                       type="text"
-                      className="promo-input"
-                      placeholder="Enter promo code"
+                      className="promo-code-input"
+                      placeholder="20 DOLLAR OFF"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && handleApplyPromo()}
                     />
-                    <button className="apply-promo-btn" onClick={handleApplyPromo}>
+                    <button className="promo-apply-btn" onClick={handleApplyPromo}>
                       Apply
                     </button>
                   </div>
-                  {errorMessage && <p className="promo-error">{errorMessage}</p>}
-                  <p className="promo-hint">Try: SAVE10, SAVE20, or FLAT50</p>
+                  {errorMessage && <p className="promo-error-msg">{errorMessage}</p>}
+                  <p className="promo-hint-text">Available: SAVE10, SAVE20, FLAT50</p>
                 </>
               ) : (
-                <div className="applied-promo">
-                  <p className="promo-success">
-                    Promo "{appliedPromo.code}" applied!{" "}
-                    {appliedPromo.type === "percentage"
+                <div className="promo-applied">
+                  <p className="promo-applied-text">
+                    Code "{appliedPromo.code}" applied{" "}
+                    ({appliedPromo.type === "percentage"
                       ? `${appliedPromo.discount}% off`
-                      : `$${appliedPromo.discount} off`}
+                      : `$${appliedPromo.discount} off`})
                   </p>
-                  <button className="remove-promo-btn" onClick={handleRemovePromo}>
+                  <button className="promo-remove-btn" onClick={handleRemovePromo}>
                     Remove
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Price breakdown */}
-            <div className="price-breakdown">
-              <div className="price-row">
-                <span>Subtotal:</span>
+            <div className="price-summary">
+              <div className="price-line">
+                <span>Subtotal</span>
                 <span>${originalTotal.toFixed(2)}</span>
               </div>
+              <div className="price-line">
+                <span>Tax</span>
+                <span>${(originalTotal * 0.1).toFixed(2)}</span>
+              </div>
               {appliedPromo && (
-                <div className="price-row discount-row">
-                  <span>Discount:</span>
-                  <span className="discount-amount">-${discount.toFixed(2)}</span>
+                <div className="price-line discount-line">
+                  <span>Discount</span>
+                  <span>-${discount.toFixed(2)}</span>
                 </div>
               )}
-              <div className="price-row total-row">
-                <span>Total:</span>
-                <span className="final-total">${finalTotal.toFixed(2)}</span>
+              <div className="price-line total-line">
+                <span>Estimated Total</span>
+                <span>${(finalTotal + originalTotal * 0.1).toFixed(2)}</span>
               </div>
             </div>
 
-            <button
-              className="clear-cart-btn"
-              onClick={() => dispatch(clearCart())}
-            >
-              Clear Cart
-            </button>
+            <button className="checkout-btn">Continue to checkout</button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
