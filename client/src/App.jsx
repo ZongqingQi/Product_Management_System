@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LoginProvider } from "./context/LoginContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -14,11 +15,12 @@ import CartPage from "./pages/CartPage";
 
 function App() {
   return (
-    <LoginProvider>
-      <Router>
-        <Navbar />
-        <main style={{ flex: 1 }}>
-          <Routes>
+    <ErrorBoundary>
+      <LoginProvider>
+        <Router>
+          <Navbar />
+          <main style={{ flex: 1 }}>
+            <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
@@ -48,6 +50,7 @@ function App() {
         <Footer />
       </Router>
     </LoginProvider>
+    </ErrorBoundary>
   );
 }
 
