@@ -132,17 +132,17 @@ const sampleProducts = [
 const seedDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Connected to DB');
+    console.log('Connected to DB');
 
     await Product.deleteMany({});
-    console.log('🧹 Existing products deleted');
+    console.log('Existing products deleted');
 
     await Product.insertMany(sampleProducts);
-    console.log('🌱 Sample products inserted');
+    console.log('Sample products inserted');
 
     process.exit();
   } catch (err) {
-    console.error('❌ Error seeding data:', err);
+    console.error('Error seeding data:', err);
     process.exit(1);
   }
 };

@@ -24,10 +24,10 @@ const sampleUsers = [
 const seedUsers = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Connected to MongoDB');
+    console.log('Connected to MongoDB');
 
     await User.deleteMany({});
-    console.log('🧹 Existing users cleared');
+    console.log('Existing users cleared');
 
     const hashed = await Promise.all(
       sampleUsers.map(async (u) => {
@@ -38,10 +38,10 @@ const seedUsers = async () => {
     );
 
     await User.insertMany(hashed);
-    console.log('🌱 Users inserted');
+    console.log('Users inserted');
     process.exit();
   } catch (err) {
-    console.error('❌ Error seeding users:', err);
+    console.error('Error seeding users:', err);
     process.exit(1);
   }
 };
