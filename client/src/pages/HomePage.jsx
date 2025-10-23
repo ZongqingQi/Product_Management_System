@@ -9,7 +9,6 @@ import "../styles/HomePage.css";
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,8 +16,11 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
+  // Get page and search from URL parameters
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
+  const pageFromUrl = parseInt(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [limit, setLimit] = useState(12); // Responsive: dynamically adjust based on screen size
 
   // Calculate items per page based on screen width
@@ -50,6 +52,11 @@ const HomePage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [limit]);
 
+  // Sync currentPage state with URL parameter
+  useEffect(() => {
+    setCurrentPage(pageFromUrl);
+  }, [pageFromUrl]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -80,6 +87,10 @@ const HomePage = () => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
+      // Update URL with new page number
+      const params = new URLSearchParams(location.search);
+      params.set("page", newPage);
+      navigate(`?${params.toString()}`, { replace: true });
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -145,7 +156,11 @@ const HomePage = () => {
                     src={product.image}
                     alt={product.name}
                     className="product-image"
-                    onClick={() => navigate(`/product/${product._id}`)}
+                    onClick={() => {
+                      // Preserve current page in URL when navigating to detail
+                      const params = new URLSearchParams(location.search);
+                      navigate(`/product/${product._id}?returnPage=${currentPage}${searchQuery ? `&search=${searchQuery}` : ''}`);
+                    }}
                   />
                 )}
                 <div className="product-info">

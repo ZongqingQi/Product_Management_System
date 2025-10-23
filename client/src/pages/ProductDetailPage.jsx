@@ -14,6 +14,11 @@ function ProductDetailPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
+  // Get return page and search query from URL
+  const searchParams = new URLSearchParams(window.location.search);
+  const returnPage = searchParams.get("returnPage") || "1";
+  const searchQuery = searchParams.get("search") || "";
+
   const cartItem = cartItems.find((i) => i._id === id);
   const qty = cartItem ? cartItem.quantity : 0;
 
@@ -36,7 +41,15 @@ function ProductDetailPage() {
         }}
       >
         <button
-          onClick={() => navigate("/")}
+          onClick={() => {
+            // Navigate back to the same page the user came from
+            const params = new URLSearchParams();
+            params.set("page", returnPage);
+            if (searchQuery) {
+              params.set("search", searchQuery);
+            }
+            navigate(`/?${params.toString()}`);
+          }}
           style={{
             background: "none",
             border: "none",
