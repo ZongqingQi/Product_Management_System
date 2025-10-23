@@ -1,3 +1,20 @@
+/**
+ * HomePage Component
+ * Main product listing page with pagination, search, and cart functionality
+ *
+ * Features:
+ * - Responsive grid layout that adjusts items per page based on screen size
+ * - URL-based pagination state (preserves page on navigation)
+ * - Product search functionality
+ * - Add to cart with quantity controls
+ * - Admin CRUD operations (create, edit, delete products)
+ *
+ * Redux Connection:
+ * - useDispatch: Gets dispatch function to send actions (addToCart, updateQuantity)
+ * - useSelector: Reads cart items from Redux store to show current quantities
+ * - Actions imported: addToCart, updateQuantity from cartSlice
+ */
+
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,23 +24,34 @@ import { addToCart, updateQuantity } from "../features/cart/cartSlice";
 import "../styles/HomePage.css";
 
 const HomePage = () => {
+  // Local state management
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isLoggedIn } = useContext(LoginContext);
+
+  // Redux hooks for cart management
+  // dispatch - Send actions to Redux store
   const dispatch = useDispatch();
+  // cartItems - Read current cart state from Redux store
+  // Component re-renders when cart state changes
   const cartItems = useSelector((state) => state.cart.items);
 
   // Get page and search from URL parameters
+  // This preserves pagination state when navigating between pages
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
   const pageFromUrl = parseInt(searchParams.get("page")) || 1;
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [limit, setLimit] = useState(12); // Responsive: dynamically adjust based on screen size
 
-  // Calculate items per page based on screen width
+  /**
+   * Calculate items per page based on screen width
+   * This ensures optimal grid layout on different devices
+   * Returns number of items to display per page
+   */
   const calculateLimit = () => {
     const width = window.innerWidth;
     if (width > 1200) return 12;      // Large screen: 4 columns × 3 rows
@@ -32,31 +60,43 @@ const HomePage = () => {
     return 4;                         // Mobile: 1 column × 4 rows
   };
 
-  // Listen to window resize and dynamically adjust limit
+  /**
+   * Responsive pagination effect
+   * Listens to window resize and dynamically adjusts items per page
+   * Resets to first page when screen size changes
+   */
   useEffect(() => {
     const handleResize = () => {
       const newLimit = calculateLimit();
       if (newLimit !== limit) {
         setLimit(newLimit);
-        setCurrentPage(1); // Reset to first page
+        setCurrentPage(1); // Reset to first page when layout changes
       }
     };
 
-    // Set initial value
+    // Set initial value on component mount
     handleResize();
 
     // Add resize event listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup function
+    // Cleanup: remove event listener on unmount
     return () => window.removeEventListener("resize", handleResize);
   }, [limit]);
 
-  // Sync currentPage state with URL parameter
+  /**
+   * Sync currentPage state with URL parameter
+   * This ensures the page state is always in sync with the URL
+   * Allows users to bookmark specific pages or use browser back/forward
+   */
   useEffect(() => {
     setCurrentPage(pageFromUrl);
   }, [pageFromUrl]);
 
+  /**
+   * Fetch products from API with pagination and search
+   * Re-fetches when search query, page, or limit changes
+   */
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -65,7 +105,7 @@ const HomePage = () => {
           params: {
             page: currentPage,
             limit: limit,
-            ...(searchQuery && { search: searchQuery }),
+            ...(searchQuery && { search: searchQuery }), // Only include search if it exists
           },
         });
         setProducts(res.data.products);
@@ -79,15 +119,24 @@ const HomePage = () => {
     fetchProducts();
   }, [searchQuery, currentPage, limit]);
 
+  /**
+   * Get quantity of a product in the cart
+   * Returns quantity in cart (0 if not in cart)
+   */
   const getCartQuantity = (id) => {
     const item = cartItems.find((i) => i._id === id);
     return item ? item.quantity : 0;
   };
 
+  /**
+   * Handle pagination with URL state preservation
+   * Updates both component state and URL parameter
+   * This allows users to share/bookmark specific pages
+   */
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      // Update URL with new page number
+      // Update URL with new page number (preserves state)
       const params = new URLSearchParams(location.search);
       params.set("page", newPage);
       navigate(`?${params.toString()}`, { replace: true });
@@ -95,6 +144,10 @@ const HomePage = () => {
     }
   };
 
+  /**
+   * Handle product deletion (admin only)
+   * Shows confirmation dialog and refreshes list after deletion
+   */
   const handleDeleteProduct = async (productId, productName) => {
     if (!window.confirm(`Are you sure you want to delete "${productName}"?`)) {
       return;
@@ -106,7 +159,7 @@ const HomePage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Refresh product list
+      // Refresh product list after deletion
       const res = await axios.get("http://localhost:5001/api/products", {
         params: {
           page: currentPage,
@@ -157,8 +210,8 @@ const HomePage = () => {
                     alt={product.name}
                     className="product-image"
                     onClick={() => {
-                      // Preserve current page in URL when navigating to detail
-                      const params = new URLSearchParams(location.search);
+                      // Preserve current page and search when navigating to product detail
+                      // This allows the "Back" button to return to the exact same page
                       navigate(`/product/${product._id}?returnPage=${currentPage}${searchQuery ? `&search=${searchQuery}` : ''}`);
                     }}
                   />
@@ -173,7 +226,11 @@ const HomePage = () => {
                     qty === 0 ? (
                       <button
                         className="add-to-cart"
-                        onClick={() => dispatch(addToCart(product))}
+                        onClick={() =>
+                          // Dispatch addToCart action to Redux store
+                          // This adds product to cart with initial quantity of 1
+                          dispatch(addToCart(product))
+                        }
                       >
                         Add To Cart
                       </button>
@@ -182,6 +239,8 @@ const HomePage = () => {
                         <button
                           className="qty-btn"
                           onClick={() =>
+                            // Dispatch updateQuantity action to decrease cart quantity
+                            // Redux store updates and component re-renders with new quantity
                             dispatch(
                               updateQuantity({
                                 id: product._id,
@@ -196,6 +255,7 @@ const HomePage = () => {
                         <button
                           className="qty-btn"
                           onClick={() =>
+                            // Dispatch updateQuantity action to increase cart quantity
                             dispatch(
                               updateQuantity({
                                 id: product._id,

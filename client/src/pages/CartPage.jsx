@@ -1,3 +1,13 @@
+/**
+ * CartPage Component
+ * Displays shopping cart with quantity controls and promo code functionality
+ *
+ * Redux Connection:
+ * - useSelector: Reads cart items from Redux store (state.cart.items)
+ * - useDispatch: Gets dispatch function to send actions to Redux store
+ * - Actions imported: updateQuantity, removeFromCart from cartSlice
+ */
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateQuantity,
@@ -15,7 +25,11 @@ const PROMO_CODES = {
 };
 
 const CartPage = () => {
+  // Read cart items from Redux store
+  // This subscribes to state.cart - component re-renders when cart state changes
   const { items } = useSelector((state) => state.cart);
+
+  // Get dispatch function to send actions to Redux store
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -101,6 +115,8 @@ const CartPage = () => {
                     <button
                       className="qty-decrease"
                       onClick={() =>
+                        // Dispatch updateQuantity action to Redux store
+                        // This triggers the reducer in cartSlice.js to update the cart state
                         dispatch(updateQuantity({ id: item._id, quantity: item.quantity - 1 }))
                       }
                       disabled={item.quantity <= 1}
@@ -111,6 +127,7 @@ const CartPage = () => {
                     <button
                       className="qty-increase"
                       onClick={() =>
+                        // Dispatch updateQuantity action to Redux store
                         dispatch(updateQuantity({ id: item._id, quantity: item.quantity + 1 }))
                       }
                     >
@@ -120,7 +137,11 @@ const CartPage = () => {
 
                   <button
                     className="cart-remove-btn"
-                    onClick={() => dispatch(removeFromCart(item._id))}
+                    onClick={() =>
+                      // Dispatch removeFromCart action to Redux store
+                      // This removes the item from cart state
+                      dispatch(removeFromCart(item._id))
+                    }
                   >
                     Remove
                   </button>

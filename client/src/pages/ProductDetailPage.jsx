@@ -1,3 +1,13 @@
+/**
+ * ProductDetailPage Component
+ * Displays detailed information about a single product
+ * Features:
+ * - Preserves pagination state when navigating back to home page
+ * - Add to cart with quantity controls
+ * - Admin edit functionality
+ * - Responsive design
+ */
+
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { LoginContext } from "../context/LoginContext";
@@ -14,14 +24,19 @@ function ProductDetailPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-  // Get return page and search query from URL
+  // Get return page and search query from URL parameters
+  // These are passed from HomePage to preserve pagination state
   const searchParams = new URLSearchParams(window.location.search);
   const returnPage = searchParams.get("returnPage") || "1";
   const searchQuery = searchParams.get("search") || "";
 
+  // Check if product is already in cart and get quantity
   const cartItem = cartItems.find((i) => i._id === id);
   const qty = cartItem ? cartItem.quantity : 0;
 
+  /**
+   * Fetch product details from API on component mount
+   */
   useEffect(() => {
     axios
       .get(`http://localhost:5001/api/products/${id}`)
@@ -42,7 +57,9 @@ function ProductDetailPage() {
       >
         <button
           onClick={() => {
-            // Navigate back to the same page the user came from
+            // Navigate back to the same page and search state the user came from
+            // Uses returnPage and searchQuery from URL parameters
+            // This preserves the user's browsing context
             const params = new URLSearchParams();
             params.set("page", returnPage);
             if (searchQuery) {
