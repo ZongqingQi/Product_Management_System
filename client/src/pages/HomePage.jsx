@@ -33,14 +33,11 @@ const HomePage = () => {
   const { user, isLoggedIn } = useContext(LoginContext);
 
   // Redux hooks for cart management
-  // dispatch - Send actions to Redux store
   const dispatch = useDispatch();
   // cartItems - Read current cart state from Redux store
-  // Component re-renders when cart state changes
   const cartItems = useSelector((state) => state.cart.items);
 
   // Get page and search from URL parameters
-  // This preserves pagination state when navigating between pages
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
   const pageFromUrl = parseInt(searchParams.get("page")) || 1;
@@ -48,9 +45,7 @@ const HomePage = () => {
   const [limit, setLimit] = useState(12); // Responsive: dynamically adjust based on screen size
 
   /**
-   * Calculate items per page based on screen width
-   * This ensures optimal grid layout on different devices
-   * Returns number of items to display per page
+   * Calculate items per page based on screen width(responsive design)
    */
   const calculateLimit = () => {
     const width = window.innerWidth;
@@ -62,8 +57,6 @@ const HomePage = () => {
 
   /**
    * Responsive pagination effect
-   * Listens to window resize and dynamically adjusts items per page
-   * Resets to first page when screen size changes
    */
   useEffect(() => {
     const handleResize = () => {
@@ -74,20 +67,15 @@ const HomePage = () => {
       }
     };
 
-    // Set initial value on component mount
     handleResize();
 
-    // Add resize event listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup: remove event listener on unmount
     return () => window.removeEventListener("resize", handleResize);
   }, [limit]);
 
   /**
    * Sync currentPage state with URL parameter
-   * This ensures the page state is always in sync with the URL
-   * Allows users to bookmark specific pages or use browser back/forward
    */
   useEffect(() => {
     setCurrentPage(pageFromUrl);
@@ -95,7 +83,6 @@ const HomePage = () => {
 
   /**
    * Fetch products from API with pagination and search
-   * Re-fetches when search query, page, or limit changes
    */
   useEffect(() => {
     const fetchProducts = async () => {
@@ -121,7 +108,6 @@ const HomePage = () => {
 
   /**
    * Get quantity of a product in the cart
-   * Returns quantity in cart (0 if not in cart)
    */
   const getCartQuantity = (id) => {
     const item = cartItems.find((i) => i._id === id);
@@ -130,8 +116,6 @@ const HomePage = () => {
 
   /**
    * Handle pagination with URL state preservation
-   * Updates both component state and URL parameter
-   * This allows users to share/bookmark specific pages
    */
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -146,7 +130,6 @@ const HomePage = () => {
 
   /**
    * Handle product deletion (admin only)
-   * Shows confirmation dialog and refreshes list after deletion
    */
   const handleDeleteProduct = async (productId, productName) => {
     if (!window.confirm(`Are you sure you want to delete "${productName}"?`)) {
